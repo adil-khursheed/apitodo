@@ -24,4 +24,8 @@ app.use(cors());
 
 app.use("/api/v1", User);
 
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
+
 export default app;

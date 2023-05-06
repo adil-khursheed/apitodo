@@ -130,7 +130,7 @@ export const logout = async (req, res) => {
       .cookie("token", null, {
         expires: new Date(Date.now()),
         httpOnly: true,
-        secure: true,
+        // secure: true,
         sameSite: "none",
       })
       .json({ success: true, message: "Logged out successfully" });

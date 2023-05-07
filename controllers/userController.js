@@ -9,6 +9,13 @@ export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter all fields!",
+      });
+    }
+
     const avatar = req.files.avatar.tempFilePath;
 
     let user = await User.findOne({ email });
@@ -130,7 +137,7 @@ export const logout = async (req, res) => {
       .cookie("token", null, {
         expires: new Date(Date.now()),
         httpOnly: true,
-        // secure: true,
+        secure: true,
         sameSite: "none",
       })
       .json({ success: true, message: "Logged out successfully" });

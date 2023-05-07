@@ -55,7 +55,7 @@ userSchema.pre("save", async function (next) {
 // to generate jwt token
 userSchema.methods.getJWTToken = function () {
   return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000,
+    expiresIn: "10d",
   });
 };
 

@@ -18,6 +18,13 @@ export const register = async (req, res) => {
 
     const avatar = req.files.avatar.tempFilePath;
 
+    if (!avatar) {
+      return res.status(400).json({
+        success: false,
+        message: "Please add your image!",
+      });
+    }
+
     let user = await User.findOne({ email });
 
     if (user) {

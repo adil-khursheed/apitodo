@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addTask,
+  deleteCompletedTask,
   deleteTask,
   forgotPassword,
   getMyProfile,
@@ -40,6 +41,9 @@ router
 
 // Get My Profile route
 router.route("/me").get(isAuthenticated, getMyProfile);
+
+// Delete completed tasks route
+router.route("/clearcompleted").delete(isAuthenticated, deleteCompletedTask);
 
 // Update Profile route
 router.route("/updateprofile").put(isAuthenticated, updateProfile);

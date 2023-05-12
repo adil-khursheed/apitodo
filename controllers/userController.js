@@ -3,6 +3,7 @@ import { sendMail } from "../utils/sendMail.js";
 import { sendToken } from "../utils/sendToken.js";
 import cloudinary from "cloudinary";
 import fs from "fs";
+import { v4 as uuidv4 } from "uuid";
 
 // Register controller
 export const register = async (req, res) => {
@@ -163,11 +164,18 @@ export const addTask = async (req, res) => {
 
     const user = await User.findById(req.user._id);
 
-    user.tasks.push({
+    const taskId = uuidv4();
+
+    const newTask = {
+      _id: taskId,
       title,
       completed: false,
       createdAt: new Date(Date.now()),
-    });
+    };
+
+    user.tasks.push(newTask);
+
+    user.activeTasks.push(newTask);
 
     await user.save();
 
@@ -190,15 +198,42 @@ export const deleteTask = async (req, res) => {
 
     const user = await User.findById(req.user._id);
 
-    user.tasks = user.tasks.filter(
-      (task) => task._id.toString() !== taskId.toString()
+    user.tasks = user.tasks.filter((task) => task._id !== taskId);
+
+    user.completedTasks = user.completedTasks.filter(
+      (task) => task._id !== taskId
     );
+
+    user.activeTasks = user.activeTasks.filter((task) => task._id !== taskId);
 
     await user.save();
 
     res.status(200).json({
       success: true,
       message: "Task deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Delete Completed Task controller
+export const deleteCompletedTask = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    user.tasks = user.tasks.filter((task) => task.completed !== true);
+
+    user.completedTasks = [];
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Tasks deleted successfully",
     });
   } catch (error) {
     res.status(500).json({
@@ -218,8 +253,19 @@ export const updateTask = async (req, res) => {
     user.task = user.tasks.find(
       (task) => task._id.toString() === taskId.toString()
     );
-
     user.task.completed = !user.task.completed;
+
+    if (user.task.completed === true) {
+      user.completedTasks.push(user.task);
+
+      user.activeTasks = user.activeTasks.filter((task) => task._id !== taskId);
+    } else {
+      user.completedTasks = user.completedTasks.filter(
+        (completedTask) => completedTask._id.toString() !== taskId.toString()
+      );
+
+      user.activeTasks.push(user.task);
+    }
 
     await user.save();
 

@@ -22,7 +22,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: "https://app-todo-lac.vercel.app",
+    origin: "https://main--scintillating-lebkuchen-3050e6.netlify.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })

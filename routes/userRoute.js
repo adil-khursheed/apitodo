@@ -18,7 +18,7 @@ import { isAuthenticated } from "../middleware/auth.js";
 import cors from "cors";
 
 const corsOptions = {
-  origin: "https://main--scintillating-lebkuchen-3050e6.netlify.app",
+  origin: "https://adil-todo.netlify.app",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 

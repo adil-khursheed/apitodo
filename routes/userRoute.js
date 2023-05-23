@@ -18,7 +18,7 @@ import { isAuthenticated } from "../middleware/auth.js";
 import cors from "cors";
 
 const corsOptions = {
-  origin: "https://todo-beryl-pi.vercel.app",
+  origin: "https://app-todo-lac.vercel.app",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 

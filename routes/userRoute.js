@@ -15,11 +15,17 @@ import {
   verify,
 } from "../controllers/userController.js";
 import { isAuthenticated } from "../middleware/auth.js";
+import cors from "cors";
+
+const corsOptions = {
+  origin: "https://todo-beryl-pi.vercel.app",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
 const router = express.Router();
 
 // Register route
-router.route("/register").post(register);
+router.route("/register").post(cors(corsOptions), register);
 
 // Verify route
 router.route("/verify").post(isAuthenticated, verify);

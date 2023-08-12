@@ -26,28 +26,6 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  tasks: [
-    {
-      _id: { type: String, required: true },
-      title: String,
-      completed: Boolean,
-      createdAt: Date,
-    },
-  ],
-  completedTasks: [
-    {
-      _id: { type: String, required: true },
-      title: String,
-      completed: Boolean,
-    },
-  ],
-  activeTasks: [
-    {
-      _id: { type: String, required: true },
-      title: String,
-      completed: Boolean,
-    },
-  ],
   verified: {
     type: Boolean,
     default: false,

@@ -3,7 +3,6 @@ import { sendMail } from "../utils/sendMail.js";
 import { sendToken } from "../utils/sendToken.js";
 import cloudinary from "cloudinary";
 import fs from "fs";
-import { v4 as uuidv4 } from "uuid";
 
 // Register controller
 export const register = async (req, res) => {
@@ -18,13 +17,6 @@ export const register = async (req, res) => {
     }
 
     const avatar = req.files.avatar.tempFilePath;
-
-    if (!avatar) {
-      return res.status(400).json({
-        success: false,
-        message: "Please add your image!",
-      });
-    }
 
     let user = await User.findOne({ email });
 
@@ -115,7 +107,7 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Invalid credentials",
+        message: "Invalid Email or Password",
       });
     }
 
@@ -124,7 +116,7 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({
         success: false,
-        message: "Invalid credentials",
+        message: "Invalid Email or Password",
       });
     }
 
@@ -140,139 +132,12 @@ export const login = async (req, res) => {
 // Logout controller
 export const logout = async (req, res) => {
   try {
-    res
-      .status(200)
-      .cookie("token", null, {
-        expires: new Date(Date.now()),
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-      })
-      .json({ success: true, message: "Logged out successfully" });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
+    res.cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
     });
-  }
-};
 
-// Add Task controller
-export const addTask = async (req, res) => {
-  try {
-    const { title } = req.body;
-
-    const user = await User.findById(req.user._id);
-
-    const taskId = uuidv4();
-
-    const newTask = {
-      _id: taskId,
-      title,
-      completed: false,
-      createdAt: new Date(Date.now()),
-    };
-
-    user.tasks.push(newTask);
-
-    user.activeTasks.push(newTask);
-
-    await user.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Task added successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-// Delete Task controller
-export const deleteTask = async (req, res) => {
-  try {
-    const { taskId } = req.params;
-
-    const user = await User.findById(req.user._id);
-
-    user.tasks = user.tasks.filter((task) => task._id !== taskId);
-
-    user.completedTasks = user.completedTasks.filter(
-      (task) => task._id !== taskId
-    );
-
-    user.activeTasks = user.activeTasks.filter((task) => task._id !== taskId);
-
-    await user.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Task deleted successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-// Delete Completed Task controller
-export const deleteCompletedTask = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-
-    user.tasks = user.tasks.filter((task) => task.completed !== true);
-
-    user.completedTasks = [];
-
-    await user.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Tasks deleted successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-// Update Task controller
-export const updateTask = async (req, res) => {
-  try {
-    const { taskId } = req.params;
-
-    const user = await User.findById(req.user._id);
-
-    user.task = user.tasks.find(
-      (task) => task._id.toString() === taskId.toString()
-    );
-    user.task.completed = !user.task.completed;
-
-    if (user.task.completed === true) {
-      user.completedTasks.push(user.task);
-
-      user.activeTasks = user.activeTasks.filter((task) => task._id !== taskId);
-    } else {
-      user.completedTasks = user.completedTasks.filter(
-        (completedTask) => completedTask._id.toString() !== taskId.toString()
-      );
-
-      user.activeTasks.push(user.task);
-    }
-
-    await user.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Task updated successfully",
-    });
+    res.status(200).json({ success: true, message: "Logged out successfully" });
   } catch (error) {
     res.status(500).json({
       success: false,

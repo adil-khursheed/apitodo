@@ -75,7 +75,7 @@ export const deleteCompletedTask = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Tasks deleted successfully",
+      message: "Completed tasks deleted successfully",
     });
   } catch (error) {
     res.status(500).json({

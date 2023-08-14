@@ -188,9 +188,18 @@ export const updateProfile = async (req, res) => {
 
     await user.save();
 
+    const userData = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      verified: user.verified,
+    };
+
     res.status(200).json({
       success: true,
       message: "Profile updated successfully",
+      user: userData,
     });
   } catch (error) {
     res.status(500).json({

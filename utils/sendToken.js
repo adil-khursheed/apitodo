@@ -4,7 +4,7 @@ export const sendToken = (res, user, statusCode, message) => {
   const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 10 * 24 * 60 * 60 * 1000,
   };
 

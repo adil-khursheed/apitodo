@@ -7,6 +7,7 @@ import fs from "fs";
 // Register controller
 export const register = async (req, res) => {
   try {
+    // console.log(req);
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
@@ -164,6 +165,8 @@ export const getMyProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
+
+    // console.log(req);
 
     const { name } = req.body;
 

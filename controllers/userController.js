@@ -54,7 +54,7 @@ export const register = async (req, res) => {
       res,
       user,
       201,
-      "OTP has been sent to your email. Please verify your account"
+      "OTP has been sent to your email. If not received in inbox, please check your spam folder."
     );
   } catch (error) {
     res.status(500).json({
@@ -83,7 +83,7 @@ export const verify = async (req, res) => {
 
     await user.save();
 
-    sendToken(res, user, 200, "Account verified");
+    sendToken(res, user, 200, "Account verified successfully!");
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -121,7 +121,7 @@ export const login = async (req, res) => {
       });
     }
 
-    sendToken(res, user, 200, "Login Successful");
+    sendToken(res, user, 200, `Welcome back ${user.name}`);
   } catch (error) {
     res.status(500).json({
       success: false,
